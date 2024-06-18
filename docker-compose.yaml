@@ -1,0 +1,36 @@
+version: '3'
+services:
+  # ========= pgadmin =======
+  pgadmin:
+    image: "dpage/pgadmin4:latest"
+    restart: always
+    ports:
+      - "82:80"
+    user: root
+    environment:
+      PGADMIN_DEFAULT_EMAIL: victor.kiraydt@interexy.com
+      PGADMIN_DEFAULT_PASSWORD: pg_master
+      PGADMIN_LISTEN_PORT: 80
+    depends_on:
+      - database
+    links:
+      - "database:pgsql-server"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  # ========= end pgadmin =======
+  # ========= database =======
+  database:
+    image: "postgres" # use latest official postgres version
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_test_password
+      POSTGRES_DB: postgres_test
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  # ========= end database =======
+volumes:
+  db-data:
+  pgadmin-data: # named volumes can be managed easier using docker-compose
